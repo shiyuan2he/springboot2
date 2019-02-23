@@ -23,6 +23,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     RedisConnectionFactory redisConnectionFactory;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    UserDetailsService userDetailsService;
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
@@ -30,9 +32,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         clients.inMemory()
-                .withClient("codeMode")
+                .withClient("authorizationCode")
                 .authorizedGrantTypes("authorization_code", "refresh_token")
-                .accessTokenValiditySeconds(1800)
+                .accessTokenValiditySeconds(180)
                 .resourceIds("rid")
                 .scopes("all")
                 .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
@@ -42,6 +44,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
                 .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
                 ;
     }
     @Override

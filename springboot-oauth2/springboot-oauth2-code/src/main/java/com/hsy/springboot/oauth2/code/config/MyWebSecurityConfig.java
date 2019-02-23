@@ -16,6 +16,12 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService(){
+        return super.userDetailsService();
+    }
+
     /**
      * 配置两个用户， he、admin
      * @param authenticationManagerBuilder
