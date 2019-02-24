@@ -1,4 +1,4 @@
-package com.hsy.springboot.oauth2.code.config;
+package com.hsy.springboot.oauth2.all.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,16 +10,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
+   /* @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-    @Bean
+    }*/
+    /*@Bean
     @Override
     protected UserDetailsService userDetailsService(){
         return super.userDetailsService();
-    }
+    }*/
 
     /**
      * 配置两个用户， he、admin

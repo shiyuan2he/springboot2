@@ -1,4 +1,4 @@
-//package com.hsy.springboot.oauth2.server;
+package com.hsy.springboot.oauth2.all.service;//package com.hsy.springboot.oauth2.server;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;
 //

@@ -26,6 +26,9 @@
        <!-- <version.jedis>3.0.1</version.jedis>-->
         <version.jedis>2.10.2</version.jedis>
         <version.spring.security.oauth2>2.3.5.RELEASE</version.spring.security.oauth2>
+        <version.commons.lang3>3.8.1</version.commons.lang3>
+        <version.mariadb.client>2.4.0</version.mariadb.client>
+        <version.mybatis>2.0.0</version.mybatis>
     </properties>
 
     <dependencies>
@@ -43,9 +46,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.commons.lang3}</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>${version.mariadb.client}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.security.oauth</groupId>
                 <artifactId>spring-security-oauth2</artifactId>
@@ -61,6 +74,13 @@
                 <artifactId>jedis</artifactId>
                 <version>${version.jedis}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${version.mybatis}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <build>

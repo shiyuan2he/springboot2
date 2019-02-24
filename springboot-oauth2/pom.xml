@@ -15,6 +15,7 @@
         <module>springboot-oauth2-password</module>
         <module>springboot-oauth2-code</module>
         <module>springboot-oauth2-client</module>
+        <module>springboot-oauth2-all</module>
     </modules>
 
 

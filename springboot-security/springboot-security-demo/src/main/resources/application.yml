@@ -1,6 +1,6 @@
-spring:
-  security:
-    user:
-      name: he
-      password: 123
-      roles: admin
+#spring:
+#  security:
+#    user:
+#      name: he
+#      password: 123
+#      roles: admin

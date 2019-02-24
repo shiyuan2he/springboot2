@@ -58,7 +58,7 @@ public class MultiWebSecurityConfig{
                     .anyRequest().authenticated()
                     .and()
                         .formLogin()
-                            .loginProcessingUrl("/login")
+                            .loginProcessingUrl("/templates/login")
                             .permitAll()
                     .and()
                     .csrf().disable()

@@ -1,29 +1,29 @@
-//package com.hsy.springboot.oauth2.server;
-//
-//import com.lima.apiserver.currentCenter.dao.OauthInfoMapper;
-//import com.lima.apiserver.oauthCenter.enums.Oauth2RolesEnum;
-//import com.lima.apiserver.oauthCenter.model.SysUserAuthentication;
-//import lombok.extern.slf4j.Slf4j;
-//import org.apache.commons.lang3.StringUtils;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.AuthorityUtils;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//
-//import java.util.List;
-//
-///**
-// * Created with IntelliJ IDEA.
-// * User: changjiang
-// * Date: 2019/1/23
-// * Time: 16:32
-// * To change this template use File | Settings | File Templates.
-// */
-//@Slf4j
-//public class BaseUserDetailService implements UserDetailsService {
-//
+package com.hsy.springboot.oauth2.code.service;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: changjiang
+ * Date: 2019/1/23
+ * Time: 16:32
+ * To change this template use File | Settings | File Templates.
+ */
+@Slf4j
+public class BaseUserDetailService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("------{}", username);
+        return new User(username, "secret", AuthorityUtils.createAuthorityList("USER"));
+    }
 //    @Autowired
 //    private OauthInfoMapper oauthInfoMapper;
 //
@@ -63,4 +63,4 @@
 //        }
 //        return user;
 //    }
-//}
+}

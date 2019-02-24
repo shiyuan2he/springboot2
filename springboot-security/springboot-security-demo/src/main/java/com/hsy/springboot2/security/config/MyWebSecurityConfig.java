@@ -1,6 +1,8 @@
 package com.hsy.springboot2.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hsy.springboot2.security.handler.MyLoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -26,14 +29,16 @@ import java.util.Map;
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    MyLoginSuccessHandler myLoginSuccessHandler;
     @Bean
     PasswordEncoder passwordEncoder(){
         // 密码不加密模式
-//        return NoOpPasswordEncoder.getInstance();
+        return NoOpPasswordEncoder.getInstance();
         /**
          * BCryptPasswordEncoder使用BCrypt强哈希函数  10表示十次密码迭代
          */
-        return new BCryptPasswordEncoder(10);
+//        return new BCryptPasswordEncoder(10);
     }
 
     /**
@@ -62,25 +67,10 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 开启表单登陆
                 .formLogin()
                     .loginPage("/view/username")
-                    .loginProcessingUrl("/login")
+                    .loginProcessingUrl("/templates/login")
                     .usernameParameter("name")
                     .passwordParameter("passwd")
-                    .successHandler(new AuthenticationSuccessHandler() {
-                        @Override
-                        public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                            Object principal = authentication.getPrincipal();
-                            httpServletResponse.setContentType("application/json;charset=utf-8");
-                            PrintWriter printWriter = httpServletResponse.getWriter();
-                            httpServletResponse.setStatus(200);
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("status", 200);
-                            map.put("msg", principal);
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            printWriter.write(objectMapper.writeValueAsString(map));
-                            printWriter.flush();
-                            printWriter.close();
-                        }
-                    })
+                    .successHandler(myLoginSuccessHandler)
                     .failureHandler(new AuthenticationFailureHandler() {
                         @Override
                         public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
