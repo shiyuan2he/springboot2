@@ -1,4 +1,4 @@
-package com.hsy.springboot.oauth2.code.config;
+package com.hsy.springboot.oauth2.client.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 @Configuration
@@ -23,10 +22,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     RedisConnectionFactory redisConnectionFactory;
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    UserDetailsService userDetailsService;
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
@@ -35,18 +30,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         clients.inMemory()
                 .withClient("client")
-                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
-                .accessTokenValiditySeconds(180)
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .accessTokenValiditySeconds(1800)
                 .resourceIds("rid")
-                .scopes("all", "read", "write")
-                .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
+                .scopes("write", "read")
+                .secret(passwordEncoder().encode("secret"))
         ;
     }
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
-                .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 ;
     }

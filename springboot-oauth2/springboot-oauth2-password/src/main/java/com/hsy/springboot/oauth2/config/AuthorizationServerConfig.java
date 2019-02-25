@@ -1,5 +1,6 @@
 package com.hsy.springboot.oauth2.config;
 
+import com.hsy.springboot.oauth2.service.impl.BaseUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
-    UserDetailsService userDetailsService;
+    BaseUserDetailService baseUserDetailService;
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
@@ -34,18 +35,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         clients.inMemory()
                 .withClient("password")
-                .authorizedGrantTypes("authorization_code", "password", "refresh_token")
+                .authorizedGrantTypes("client_credentials", "password", "refresh_token")
                 .accessTokenValiditySeconds(1800)
                 .resourceIds("rid")
                 .scopes("all")
-                .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
+                .secret(passwordEncoder().encode("secret"))
         ;
     }
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
+                .userDetailsService(baseUserDetailService)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 ;
     }
@@ -53,6 +54,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer securityConfigurer) throws Exception{
         // 允许表单验证
         securityConfigurer.allowFormAuthenticationForClients();
-
     }
 }
