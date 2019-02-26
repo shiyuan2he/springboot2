@@ -32,10 +32,11 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
+        super.configure(authenticationManagerBuilder);
         /**
          * 用户从数据库中读取比对
          */
-        authenticationManagerBuilder.userDetailsService(baseUserDetailService());
+//        authenticationManagerBuilder.userDetailsService(baseUserDetailService());
      /*   authenticationManagerBuilder.inMemoryAuthentication()
                 .withUser("admin").password("$2a$10$iiDhNHOCUbl1wcYSiim9UOqOiB45LgKGLg84MrNDfqMOJ4/zO1Ady").roles("ADMIN", "USER")
                 .and()

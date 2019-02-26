@@ -25,8 +25,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     RedisConnectionFactory redisConnectionFactory;
     @Autowired
     AuthenticationManager authenticationManager;
-    @Autowired
-    BaseUserDetailService baseUserDetailService;
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
@@ -46,13 +44,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
                 .authenticationManager(authenticationManager)
-                .userDetailsService(baseUserDetailService)
+//                .userDetailsService(baseUserDetailService)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 ;
     }
     @Override
     public void configure(AuthorizationServerSecurityConfigurer securityConfigurer) throws Exception{
         // 允许表单验证
-        securityConfigurer.allowFormAuthenticationForClients();
+        securityConfigurer.allowFormAuthenticationForClients()
+                .tokenKeyAccess("isAuthenticated()")
+                .checkTokenAccess("permitAll()")
+        ;
     }
 }

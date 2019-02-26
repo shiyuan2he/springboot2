@@ -23,34 +23,24 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     RedisConnectionFactory redisConnectionFactory;
-//    @Autowired
-//    AuthenticationManager authenticationManager;
     @Autowired
-    UserDetailsService userDetailsService;
+    AuthenticationManager authenticationManager;
+
     @Autowired
-    ClientDetailsService clientDetailsService;
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(10);
-    }
+    UserDetailsService userService;
+    @Autowired
+    ClientDetailsService clientDetailServiceImpl;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         // 根据数据库动态注册
-        clients.withClientDetails(clientDetailsService);
-        /*clients.inMemory()
-                .withClient("password")
-                .authorizedGrantTypes("authorization_code", "password", "refresh_token")
-                .accessTokenValiditySeconds(1800)
-                .resourceIds("rid")
-                .scopes("all")
-                .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
-        ;*/
+        clients.withClientDetails(clientDetailServiceImpl);
     }
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
-//                .authenticationManager(authenticationManager)
-//                .userDetailsService(userDetailsService)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userService)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 ;
     }
@@ -58,6 +48,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer securityConfigurer) throws Exception{
         // 允许表单验证
         securityConfigurer.allowFormAuthenticationForClients();
-
     }
 }
