@@ -2,6 +2,7 @@ package com.hsy.springboot2.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsy.springboot2.security.handler.MyLoginSuccessHandler;
+import com.hsy.springboot2.security.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -30,15 +33,15 @@ import java.util.Map;
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    UserDetailsService userService;
+    @Autowired
     MyLoginSuccessHandler myLoginSuccessHandler;
     @Bean
     PasswordEncoder passwordEncoder(){
-        // 密码不加密模式
-        return NoOpPasswordEncoder.getInstance();
         /**
          * BCryptPasswordEncoder使用BCrypt强哈希函数  10表示十次密码迭代
          */
-//        return new BCryptPasswordEncoder(10);
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     /**
@@ -48,11 +51,12 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-        authenticationManagerBuilder.inMemoryAuthentication()
+        authenticationManagerBuilder.userDetailsService(userService);
+        /*authenticationManagerBuilder.inMemoryAuthentication()
                 .withUser("admin").password("123").roles("ADMIN", "USER")
                 .and()
                 .withUser("he").password("123").roles("USER")
-                ;
+                ;*/
     }
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
@@ -67,9 +71,7 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 开启表单登陆
                 .formLogin()
                     .loginPage("/view/username")
-                    .loginProcessingUrl("/templates/login")
-                    .usernameParameter("name")
-                    .passwordParameter("passwd")
+                    .loginProcessingUrl("/login")
                     .successHandler(myLoginSuccessHandler)
                     .failureHandler(new AuthenticationFailureHandler() {
                         @Override

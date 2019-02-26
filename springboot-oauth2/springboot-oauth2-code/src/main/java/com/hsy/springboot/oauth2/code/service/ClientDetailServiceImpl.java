@@ -50,7 +50,7 @@ public class ClientDetailServiceImpl implements ClientDetailsService {
             client.setClientId(clientId);
             client.setClientSecret("{noop}"+oauthInfo.getClientSecret());
             client.setResourceIds(Arrays.asList(oauthInfo.getResourceIds()));
-            client.setAuthorizedGrantTypes(Arrays.asList(oauthInfo.getAuthorizedGrantTypes()));
+            client.setAuthorizedGrantTypes(Arrays.asList(oauthInfo.getAuthorizedGrantTypes().split(",")));
             //不同的client可以通过 一个scope 对应 权限集
             client.setScope(Arrays.asList(oauthInfo.getScope()));
 
