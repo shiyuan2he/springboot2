@@ -1,26 +1,16 @@
-package com.hsy.springboot.oauth2.code.config;
-import org.springframework.context.annotation.Bean;
+package com.hsy.springboot.oauth2.client.config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService(){
-        return super.userDetailsService();
-    }
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     /**
      * 配置两个用户， he、admin
      * @param authenticationManagerBuilder
@@ -29,18 +19,15 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
         authenticationManagerBuilder.inMemoryAuthentication()
-                .withUser("admin").password("$2a$10$iiDhNHOCUbl1wcYSiim9UOqOiB45LgKGLg84MrNDfqMOJ4/zO1Ady").roles("ADMIN", "USER")
+                .withUser("admin").password(passwordEncoder.encode("secret")).roles("ADMIN", "USER")
                 .and()
-                .withUser("he").password("$2a$10$iiDhNHOCUbl1wcYSiim9UOqOiB45LgKGLg84MrNDfqMOJ4/zO1Ady").roles("USER")
+                .withUser("he").password(passwordEncoder.encode("secret")).roles("USER")
                 ;
     }
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.antMatcher("/oauth/**").authorizeRequests()
-                .antMatchers("/oauth/**").authenticated()
                 .antMatchers("/oauth/**").permitAll()
-                .and()
-                .formLogin().permitAll()
                 .and().csrf().disable()
                 ;
     }
