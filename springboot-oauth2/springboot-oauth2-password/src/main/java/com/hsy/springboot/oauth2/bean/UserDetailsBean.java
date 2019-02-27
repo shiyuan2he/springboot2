@@ -4,13 +4,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-/**
- * Created with IntelliJ IDEA.
- * User: changjiang
- * Date: 2019/1/23
- * Time: 16:53
- * To change this template use File | Settings | File Templates.
- */
 public class UserDetailsBean implements UserDetails {
 
     /**
