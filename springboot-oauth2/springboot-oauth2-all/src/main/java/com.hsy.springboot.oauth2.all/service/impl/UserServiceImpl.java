@@ -17,7 +17,7 @@ import java.util.Map;
 
 @SuppressWarnings("Duplicates")
 @Slf4j
-@Service("userService")
+//@Service("userService")
 public class UserServiceImpl implements UserDetailsService{
     @Autowired
     PasswordEncoder passwordEncoder;

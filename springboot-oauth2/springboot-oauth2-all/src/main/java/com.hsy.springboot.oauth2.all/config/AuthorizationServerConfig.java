@@ -1,5 +1,6 @@
 package com.hsy.springboot.oauth2.all.config;
 
+import com.hsy.springboot.oauth2.all.service.impl.ClientDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,25 +29,35 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     UserDetailsService userService;
-    @Autowired
-    ClientDetailsService clientDetailServiceImpl;
+//    @Autowired
+//    ClientDetailsService clientDetailServiceImpl;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         // 根据数据库动态注册
-        clients.withClientDetails(clientDetailServiceImpl);
+        clients.withClientDetails(new ClientDetailServiceImpl());
+        /*clients.inMemory()
+                .withClient("client")
+                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
+                .accessTokenValiditySeconds(180)
+                .resourceIds("resourceId")
+                .scopes("all", "read", "write")
+                .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
+                .redirectUris("http://www.baidu.com")*/
+        ;
     }
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
         endpointsConfigurer.tokenStore(new RedisTokenStore(redisConnectionFactory))
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userService)
+//                .userDetailsService(userService)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 ;
     }
     @Override
     public void configure(AuthorizationServerSecurityConfigurer securityConfigurer) throws Exception{
         // 允许表单验证
-        securityConfigurer.allowFormAuthenticationForClients();
+        securityConfigurer.allowFormAuthenticationForClients().tokenKeyAccess("isAuthenticated()")
+                .checkTokenAccess("permitAll()");
     }
 }

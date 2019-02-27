@@ -40,7 +40,7 @@ public class ClientDetailServiceImpl implements ClientDetailsService {
         tOauthClient.setRedirectUri("http://www.baidu.com");
         tOauthClient.setRefreshTokenValiditySeconds(180);
         tOauthClient.setResourceIds("resourceId");
-        tOauthClient.setScope("ALL");
+        tOauthClient.setScope("all");
         list.add(tOauthClient);
         return list;
     }
