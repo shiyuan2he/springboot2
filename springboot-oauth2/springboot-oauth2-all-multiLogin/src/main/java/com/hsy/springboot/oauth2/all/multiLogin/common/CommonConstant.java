@@ -1,4 +1,4 @@
-package com.hsy.springboot.oauth2.all.common;
+package com.hsy.springboot.oauth2.all.multiLogin.common;
 
 /**
  * @author heshiyuan
@@ -11,5 +11,7 @@ package com.hsy.springboot.oauth2.all.common;
  * @price ¥5    微信：hewei1109
  */
 public class CommonConstant {
+
     public static final String USERNAME_LOGINTYPE_SPLIT = "==";
+    public static ThreadLocal<String> LOGIN_TYPE = new ThreadLocal<>();
 }

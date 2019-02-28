@@ -1,9 +1,7 @@
-package com.hsy.springboot.oauth2.all.config;
-
-import com.hsy.springboot.oauth2.all.filter.JsonToUrlEncodedAuthenticationFilter;
+package com.hsy.springboot.oauth2.all.multiLogin.config;
+import com.hsy.springboot.oauth2.all.multiLogin.filter.JsonToUrlEncodedAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -11,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
+@SuppressWarnings("ALL")
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -35,7 +34,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("admin")
-                .antMatchers("/tel/**").hasRole("user")
+                .antMatchers("/user/**").hasRole("user")
+                .antMatchers("/openapi/**").hasRole("user")
                 .anyRequest().authenticated()
                 ;
     }

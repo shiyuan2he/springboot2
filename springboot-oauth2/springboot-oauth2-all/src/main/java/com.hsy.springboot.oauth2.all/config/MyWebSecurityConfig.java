@@ -1,4 +1,5 @@
 package com.hsy.springboot.oauth2.all.config;
+import com.hsy.springboot.oauth2.all.filter.AiLoginRedirectFilter;
 import com.hsy.springboot.oauth2.all.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
 @Order(2)
@@ -57,7 +59,9 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.requestMatchers().antMatchers("/oauth/**", "/login/**", "/logout/**")
+        httpSecurity
+                .addFilterBefore(new AiLoginRedirectFilter(), UsernamePasswordAuthenticationFilter.class)
+                .requestMatchers().antMatchers("/oauth/**", "/login/**", "/logout/**")
                 .and()
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

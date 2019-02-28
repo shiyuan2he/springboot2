@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义的用户名登陆</title>
+</head>
+<body>
+<form th:action="@{/login}" method="post">
+    <div><label> 用户名 : <input type="text" name="username" value="admin"/> </label></div>
+    <div><label> 密  码 : <input type="password" name="password" value="123456"/> </label></div>
+    <input type="hidden" name="login_type" value="0"/>
+    <div><input type="submit" value="登录"/></div>
+</form>
+</body>
+</html>
