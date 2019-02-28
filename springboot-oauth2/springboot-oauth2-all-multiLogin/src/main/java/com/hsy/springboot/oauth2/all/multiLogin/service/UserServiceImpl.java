@@ -41,11 +41,12 @@ public class UserServiceImpl implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String loginType = "" ;
         log.info(username);
-        String loginType = CommonConstant.LOGIN_TYPE.get();
-        log.info(loginType);
-        if(StringUtils.isNotBlank(loginType) && loginType.split(CommonConstant.USERNAME_LOGINTYPE_SPLIT)[0].equals(username)){
-            log.info(loginType.split(CommonConstant.USERNAME_LOGINTYPE_SPLIT)[1]);
+        if(StringUtils.isNotBlank(username)){
+            loginType = username.split(CommonConstant.USERNAME_LOGINTYPE_SPLIT)[1];
+            username = username.split(CommonConstant.USERNAME_LOGINTYPE_SPLIT)[0];
+            log.info("{} : {}",username, loginType);
         }
         User user = new User();
         for (Map<String, String> userMap : userList) {

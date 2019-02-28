@@ -65,19 +65,22 @@ public class MultiWebSecurityConfig {
         MyLoginFailureHandler myLoginFailureHandler;
         @Autowired
         MyLoginSuccessHandler myLoginSuccessHandler;
-        @Autowired
-        AiLoginRedirectFilter aiLoginRedirectFilter;
         @Bean
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }
-
+        @Bean
+        AiLoginRedirectFilter aiLoginRedirectFilter() throws Exception {
+            AiLoginRedirectFilter aiLoginRedirectFilter = new AiLoginRedirectFilter();
+            aiLoginRedirectFilter.setAuthenticationManager(authenticationManagerBean());
+            return aiLoginRedirectFilter;
+        }
         @Override
         protected void configure(HttpSecurity httpSecurity) throws Exception{
             // 配置拦截范围
             httpSecurity
-                    .addFilterBefore(aiLoginRedirectFilter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(aiLoginRedirectFilter() , UsernamePasswordAuthenticationFilter.class)
                     .requestMatchers().antMatchers("/admin/**", "/login/**", "/oauth/**", "/logout/**", "/view/**")
                     .and()
                         .authorizeRequests()

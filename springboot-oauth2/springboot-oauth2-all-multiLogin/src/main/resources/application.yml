@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: company
+    active: home
 security:
   basic:
     enabled: false

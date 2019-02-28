@@ -35,7 +35,12 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    @Bean
+    AiLoginRedirectFilter aiLoginRedirectFilter() throws Exception {
+        AiLoginRedirectFilter aiLoginRedirectFilter = new AiLoginRedirectFilter();
+        aiLoginRedirectFilter.setAuthenticationManager(authenticationManagerBean());
+        return aiLoginRedirectFilter;
+    }
     /**
      * 通过自定义userDetailsService 来实现查询数据库，手机，二维码等多种验证方式
      */
@@ -60,15 +65,17 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
-                .addFilterBefore(new AiLoginRedirectFilter(), UsernamePasswordAuthenticationFilter.class)
-                .requestMatchers().antMatchers("/oauth/**", "/login/**", "/logout/**")
+                .addFilterBefore(aiLoginRedirectFilter(), UsernamePasswordAuthenticationFilter.class)
+                .requestMatchers().antMatchers("/oauth/**", "/login/**", "/logout/**", "/view/**")
                 .and()
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/oauth/**", "/login/**", "/logout/**").permitAll()
-                    .antMatchers("/oauth/**", "/login/**", "/logout/**").authenticated()
+                    .antMatchers("/oauth/**", "/login/**", "/logout/**" , "/view/**").permitAll()
                 .and()
-                    .formLogin().permitAll()
+                    .formLogin()
+                        .loginPage("/view/username")
+                        .loginProcessingUrl("/login")
+                    .permitAll()
                 .and().csrf().disable()
                 ;
     }

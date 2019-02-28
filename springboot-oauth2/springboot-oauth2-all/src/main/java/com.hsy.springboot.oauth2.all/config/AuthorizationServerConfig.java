@@ -36,15 +36,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         // 根据数据库动态注册
         clients.withClientDetails(new ClientDetailServiceImpl());
-        /*clients.inMemory()
-                .withClient("client")
-                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
-                .accessTokenValiditySeconds(180)
-                .resourceIds("resourceId")
-                .scopes("all", "read", "write")
-                .secret("$2a$10$6D8cd9IbABD8RBpP.QTMXeZICEZkaE.dSIeaj.Yl6EBfvYVXu23vK")
-                .redirectUris("http://www.baidu.com")*/
-        ;
     }
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) throws Exception{
